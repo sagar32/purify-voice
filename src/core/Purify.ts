@@ -4,12 +4,12 @@
  */
 
 import type { PurifyOptions, PurifyInstance } from './types';
+import { RNNoiseWASM } from '../wasm/rnnoise-loader.js';
 
 export class Purify implements PurifyInstance {
   private options: Required<PurifyOptions>;
   private ready: boolean = false;
-  private wasmModule: any = null;
-  private rnnoiseState: any = null;
+  private rnnoiseWasm: RNNoiseWASM | null = null;
   private audioContext: AudioContext | null = null;
 
   constructor(options: PurifyOptions = {}) {
@@ -29,12 +29,13 @@ export class Purify implements PurifyInstance {
         this.audioContext = new AudioContext({ sampleRate: this.options.sampleRate });
       }
 
-      // TODO: Load WASM module
-      // For now, we'll use a placeholder
-      console.log('Purify Voice initializing...');
+      // Load and initialize RNNoise WASM
+      console.log('Loading RNNoise WASM...');
+      this.rnnoiseWasm = new RNNoiseWASM();
+      await this.rnnoiseWasm.initialize();
       
       this.ready = true;
-      console.log('Purify Voice ready!');
+      console.log('✅ Purify Voice ready with RNNoise WASM!');
     } catch (error) {
       console.error('Failed to initialize Purify:', error);
       throw error;
@@ -78,14 +79,31 @@ export class Purify implements PurifyInstance {
     }
 
     try {
-      const channelData = audioBuffer.getChannelData(0);
+      let bufferToProcess = audioBuffer;
+      
+      // Resample to 48kHz if needed (RNNoise requires 48kHz)
+      if (audioBuffer.sampleRate !== 48000) {
+        console.log(`Resampling from ${audioBuffer.sampleRate}Hz to 48000Hz...`);
+        const offlineContext = new OfflineAudioContext(
+          1,
+          Math.ceil(audioBuffer.duration * 48000),
+          48000
+        );
+        const source = offlineContext.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(offlineContext.destination);
+        source.start();
+        bufferToProcess = await offlineContext.startRendering();
+      }
+      
+      const channelData = bufferToProcess.getChannelData(0);
       const processedData = await this.processRaw(channelData);
 
-      // Create new audio buffer with processed data
+      // Create new audio buffer with processed data at 48kHz
       const processedBuffer = this.audioContext.createBuffer(
         1,
         processedData.length,
-        this.options.sampleRate
+        48000
       );
       // Create a new Float32Array with proper ArrayBuffer type
       const outputData = new Float32Array(processedData);
@@ -124,53 +142,18 @@ export class Purify implements PurifyInstance {
   }
 
   async processRaw(pcmData: Float32Array): Promise<Float32Array> {
-    if (!this.ready) {
+    if (!this.ready || !this.rnnoiseWasm) {
       throw new Error('Purify not initialized. Call initialize() first.');
     }
 
-    // Process in frames
-    const frameSize = this.options.frameSize;
-    const numFrames = Math.floor(pcmData.length / frameSize);
-    const output = new Float32Array(pcmData.length);
-
-    for (let i = 0; i < numFrames; i++) {
-      const start = i * frameSize;
-      const end = start + frameSize;
-      const frame = pcmData.slice(start, end);
-
-      // TODO: Process frame with RNNoise WASM
-      // For now, apply simple noise gate
-      const processedFrame = this.processFrame(frame);
-      output.set(processedFrame, start);
+    try {
+      // Process audio with RNNoise WASM
+      const output = this.rnnoiseWasm.processAudio(pcmData);
+      return output;
+    } catch (error) {
+      console.error('Error processing raw audio:', error);
+      throw error;
     }
-
-    // Handle remaining samples
-    const remaining = pcmData.length % frameSize;
-    if (remaining > 0) {
-      const lastFrame = new Float32Array(frameSize);
-      lastFrame.set(pcmData.slice(-remaining));
-      const processedFrame = this.processFrame(lastFrame);
-      output.set(processedFrame.slice(0, remaining), pcmData.length - remaining);
-    }
-
-    return output;
-  }
-
-  private processFrame(frame: Float32Array): Float32Array {
-    // Simple noise gate as placeholder
-    // This will be replaced with actual RNNoise WASM processing
-    const threshold = 0.02;
-    const output = new Float32Array(frame.length);
-
-    for (let i = 0; i < frame.length; i++) {
-      if (Math.abs(frame[i]) > threshold) {
-        output[i] = frame[i];
-      } else {
-        output[i] = frame[i] * 0.1;
-      }
-    }
-
-    return output;
   }
 
   private audioBufferToWav(audioBuffer: AudioBuffer): Blob {
@@ -230,6 +213,10 @@ export class Purify implements PurifyInstance {
   }
 
   destroy(): void {
+    if (this.rnnoiseWasm) {
+      this.rnnoiseWasm.destroy();
+      this.rnnoiseWasm = null;
+    }
     if (this.audioContext) {
       this.audioContext.close();
       this.audioContext = null;

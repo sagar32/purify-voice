@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASM Test</title>
+</head>
+<body>
+    <h1>RNNoise WASM Test</h1>
+    <button id="testBtn">Test WASM Loading</button>
+    <pre id="output"></pre>
+
+    <script type="module">
+        const output = document.getElementById('output');
+        
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            try {
+                output.textContent = 'Loading WASM...\n';
+                
+                const rnnoiseModule = await import('/rnnoise.js');
+                const createModule = rnnoiseModule.default;
+                const module = await createModule({
+                    locateFile: (path) => {
+                        if (path.endsWith('.wasm')) {
+                            return '/rnnoise.wasm';
+                        }
+                        return path;
+                    }
+                });
+                
+                output.textContent += 'WASM module loaded!\n';
+                
+                const state = module._rnnoise_create(0);
+                output.textContent += `RNNoise state created: ${state}\n`;
+                
+                if (state) {
+                    const frameSize = 480;
+                    const inputPtr = module._malloc(frameSize * 4);
+                    const outputPtr = module._malloc(frameSize * 4);
+                    
+                    // Fill with test data - use setValue to write to memory
+                    for (let i = 0; i < frameSize; i++) {
+                        const value = Math.random() * 0.1;
+                        module.setValue(inputPtr + i * 4, value, 'float');
+                    }
+                    
+                    const vadProb = module._rnnoise_process_frame(state, outputPtr, inputPtr);
+                    output.textContent += `Processed frame! VAD probability: ${vadProb}\n`;
+                    
+                    // Read output - use getValue
+                    let sum = 0;
+                    for (let i = 0; i < 10; i++) {
+                        sum += module.getValue(outputPtr + i * 4, 'float');
+                    }
+                    output.textContent += `Output sample sum (first 10): ${sum.toFixed(6)}\n`;
+                    
+                    module._free(inputPtr);
+                    module._free(outputPtr);
+                    module._rnnoise_destroy(state);
+                    
+                    output.textContent += '✅ WASM is working correctly!\n';
+                    output.textContent += '\n🎉 RNNoise C library is processing audio!\n';
+                } else {
+                    output.textContent += '❌ Failed to create RNNoise state\n';
+                }
+                
+            } catch (error) {
+                output.textContent += `❌ Error: ${error.message}\n${error.stack}\n`;
+            }
+        });
+    </script>
+</body>
+</html>
