@@ -1,0 +1,10 @@
+test/
+examples/
+src/
+*.md
+!README.md
+tsconfig.json
+rollup.config.js
+.eslintrc.js
+jest.config.js
+scripts/

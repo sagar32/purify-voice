@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purify Voice - Vanilla JS Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .status {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            background: #f0f0f0;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .status.ready {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status.processing {
+            background: #ffa500;
+            color: white;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        audio {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .result h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ Purify Voice</h1>
+        <p class="subtitle">Audio Denoising Demo</p>
+
+        <div class="status" id="status">Initializing...</div>
+
+        <input type="file" id="fileInput" accept="audio/*" disabled>
+        <button id="processBtn" disabled>Process Audio</button>
+
+        <div class="result" id="result" style="display: none;">
+            <h3>✨ Denoised Audio</h3>
+            <audio id="resultAudio" controls></audio>
+            <button id="downloadBtn">Download</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { Purify } from '../../dist/index.mjs';
+
+        let purify;
+        let denoisedBlob;
+
+        const status = document.getElementById('status');
+        const fileInput = document.getElementById('fileInput');
+        const processBtn = document.getElementById('processBtn');
+        const result = document.getElementById('result');
+        const resultAudio = document.getElementById('resultAudio');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        // Initialize Purify
+        async function init() {
+            try {
+                purify = new Purify();
+                await purify.initialize();
+                
+                status.textContent = 'Ready! Select an audio file';
+                status.className = 'status ready';
+                fileInput.disabled = false;
+                processBtn.disabled = false;
+            } catch (error) {
+                status.textContent = 'Error: ' + error.message;
+                console.error(error);
+            }
+        }
+
+        // Process audio file
+        processBtn.addEventListener('click', async () => {
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please select an audio file');
+                return;
+            }
+
+            try {
+                status.textContent = 'Processing...';
+                status.className = 'status processing';
+                processBtn.disabled = true;
+
+                denoisedBlob = await purify.processFile(file);
+
+                resultAudio.src = URL.createObjectURL(denoisedBlob);
+                result.style.display = 'block';
+
+                status.textContent = 'Done! Listen to the result below';
+                status.className = 'status ready';
+            } catch (error) {
+                status.textContent = 'Error: ' + error.message;
+                console.error(error);
+            } finally {
+                processBtn.disabled = false;
+            }
+        });
+
+        // Download result
+        downloadBtn.addEventListener('click', () => {
+            const url = URL.createObjectURL(denoisedBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'denoised_' + Date.now() + '.wav';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
