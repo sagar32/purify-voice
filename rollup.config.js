@@ -9,7 +9,12 @@ const production = !process.env.ROLLUP_WATCH;
 export default [
   // Main bundle with WASM support
   {
-    input: 'src/index.ts',
+    input: {
+      'index': 'src/index.ts',
+      'integrations/react/index': 'src/integrations/react/index.ts',
+      'integrations/vue/index': 'src/integrations/vue/index.ts',
+      'integrations/angular/index': 'src/integrations/angular/index.ts',
+    },
     output: {
       dir: 'dist',
       format: 'es',
