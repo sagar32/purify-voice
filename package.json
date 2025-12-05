@@ -1,6 +1,6 @@
 {
   "name": "purify-voice",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "Professional audio denoising for JavaScript using RNNoise - works with React, Vue, Angular, and vanilla JS",
   "main": "dist/index.js",
