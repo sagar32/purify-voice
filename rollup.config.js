@@ -14,7 +14,8 @@ export default [
       dir: 'dist',
       format: 'es',
       sourcemap: true,
-      preserveModules: false,
+      preserveModules: true,
+      preserveModulesRoot: 'src',
     },
     external: ['react', 'vue', '@angular/core', 'rxjs', /^react\//, /^vue\//, /^@angular\//],
     plugins: [

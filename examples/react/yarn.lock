@@ -637,10 +637,10 @@ postcss@^8.4.43:
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
 
-purify-voice@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/purify-voice/-/purify-voice-1.0.3.tgz#bf55fe0606e89b68aa1c202271b34d243b51561b"
-  integrity sha512-lo6geyRa6iwBPp0i8g+xFAIlNyh3+ITK2Aa4s1nQaAxQbF4xAfmMaKZjwY1JAKVUlyqv00Aft9W3z/6gewNARA==
+purify-voice@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/purify-voice/-/purify-voice-1.0.4.tgz#c59da545727d7a91df48559d25546cad7c8bcf16"
+  integrity sha512-sAeLswGIGrQuGw7antkNzJYGLQHC0KwZKNksxaoA2SMUU6mUQl0JP0C3QoLuDnd1ijsML/WRcf6rIfZRqWzR/A==
 
 react-dom@^18.2.0:
   version "18.3.1"
