@@ -1,11 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "purify-voice": ["../../dist/index.js"],
-      "purify-voice/*": ["../../dist/index.js"]
-    },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": false,

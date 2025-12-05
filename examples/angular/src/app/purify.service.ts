@@ -5,8 +5,7 @@
 
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Purify } from './core/Purify';
-import type { PurifyOptions } from './core/types';
+import { Purify } from 'purify-voice';
 
 @Injectable({
   providedIn: 'root'
@@ -25,11 +24,10 @@ export class PurifyService implements OnDestroy {
     this.initialize();
   }
 
-  private async initialize(options?: PurifyOptions): Promise<void> {
+  private async initialize(): Promise<void> {
     try {
       console.log('🚀 Initializing Purify with RNNoise WASM...');
       this.purify = new Purify({
-        ...options,
         wasmPath: '/rnnoise.wasm' // Load from public directory
       });
       await this.purify.initialize();
