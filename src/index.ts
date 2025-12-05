@@ -9,6 +9,9 @@ export type { PurifyOptions, ProcessingResult, PurifyInstance } from './core/typ
 // Re-export React integration
 export { usePurify } from './integrations/react';
 
+// Re-export Angular integration
+export { PurifyService } from './integrations/angular';
+
 // Default export
 import { Purify } from './core/Purify';
 export default Purify;

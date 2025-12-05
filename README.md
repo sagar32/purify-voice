@@ -103,6 +103,37 @@ const handleFile = async (e) => {
 </script>
 ```
 
+### Angular
+
+```typescript
+import { Component } from '@angular/core';
+import { PurifyService } from 'purify-voice/angular';
+
+@Component({
+  selector: 'app-audio-denoiser',
+  template: `
+    <input type="file" accept="audio/*" (change)="handleFile($event)" 
+           [disabled]="!(purifyService.isReady$ | async)" />
+    <p *ngIf="purifyService.isProcessing$ | async">Processing...</p>
+    <audio *ngIf="result" [src]="result" controls></audio>
+  `
+})
+export class AudioDenoiserComponent {
+  result: string | null = null;
+
+  constructor(public purifyService: PurifyService) {}
+
+  async handleFile(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    
+    this.purifyService.processFile(file).subscribe(denoised => {
+      this.result = URL.createObjectURL(denoised);
+    });
+  }
+}
+```
+
 ### Node.js
 
 ```javascript

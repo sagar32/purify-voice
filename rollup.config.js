@@ -16,7 +16,7 @@ export default [
       sourcemap: true,
       preserveModules: false,
     },
-    external: ['react', 'vue', /^react\//, /^vue\//],
+    external: ['react', 'vue', '@angular/core', 'rxjs', /^react\//, /^vue\//, /^@angular\//],
     plugins: [
       resolve({
         browser: true,

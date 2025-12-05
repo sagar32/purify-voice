@@ -198,19 +198,62 @@ function App() {
       )}
 
       <div className="info">
-        <h4>ℹ️ How it works:</h4>
-        <ul>
-          <li><strong>Pure WebAssembly</strong> - Uses actual RNNoise C library compiled to WASM</li>
-          <li>Click "Start Recording" to capture audio from your microphone</li>
-          <li>Speak for a few seconds (background noise will be captured too)</li>
-          <li>Audio is processed in-browser with RNNoise WebAssembly</li>
-          <li>Same quality as the native C library (rnnoise_live.c)</li>
-          <li>Compare the original and denoised audio side-by-side</li>
-          <li>Download both versions if you want to save them</li>
-        </ul>
-        <p style={{ marginTop: '10px', fontSize: '0.9em', color: '#666' }}>
-          <strong>✨ No server required!</strong> All processing happens in your browser using WebAssembly.
-        </p>
+        <h4>💡 How It Works</h4>
+        
+        <div className="feature-grid">
+          <div className="feature-item">
+            <span className="feature-icon">🎯</span>
+            <div>
+              <strong>Pure WebAssembly</strong>
+              <p>Powered by the actual RNNoise C library compiled to WASM for maximum performance</p>
+            </div>
+          </div>
+          
+          <div className="feature-item">
+            <span className="feature-icon">🎙️</span>
+            <div>
+              <strong>Real-time Processing</strong>
+              <p>Click "Start Recording" to capture audio directly from your microphone</p>
+            </div>
+          </div>
+          
+          <div className="feature-item">
+            <span className="feature-icon">🔊</span>
+            <div>
+              <strong>Intelligent Noise Reduction</strong>
+              <p>Advanced AI removes background noise while preserving voice clarity</p>
+            </div>
+          </div>
+          
+          <div className="feature-item">
+            <span className="feature-icon">📊</span>
+            <div>
+              <strong>Visual Comparison</strong>
+              <p>Compare waveforms and listen to original vs. denoised audio side-by-side</p>
+            </div>
+          </div>
+          
+          <div className="feature-item">
+            <span className="feature-icon">⬇️</span>
+            <div>
+              <strong>Export & Save</strong>
+              <p>Download both versions in high-quality WAV format</p>
+            </div>
+          </div>
+          
+          <div className="feature-item">
+            <span className="feature-icon">🔒</span>
+            <div>
+              <strong>100% Private</strong>
+              <p>All processing happens locally in your browser - no server uploads required</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="tech-note">
+          <strong>⚡ Professional Quality:</strong> Industry-grade noise reduction technology 
+          optimized for crystal-clear voice enhancement in any environment.
+        </div>
       </div>
     </div>
   );

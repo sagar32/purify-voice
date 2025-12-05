@@ -18,6 +18,10 @@
     "./vue": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./angular": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
@@ -82,13 +86,21 @@
   },
   "peerDependencies": {
     "react": ">=16.8.0",
-    "vue": ">=3.0.0"
+    "vue": ">=3.0.0",
+    "@angular/core": ">=14.0.0",
+    "rxjs": ">=7.0.0"
   },
   "peerDependenciesMeta": {
     "react": {
       "optional": true
     },
     "vue": {
+      "optional": true
+    },
+    "@angular/core": {
+      "optional": true
+    },
+    "rxjs": {
       "optional": true
     }
   }
