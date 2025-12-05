@@ -9,18 +9,26 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
     "./react": {
       "import": "./dist/integrations/react/index.js",
+      "require": "./dist/integrations/react/index.js",
+      "default": "./dist/integrations/react/index.js",
       "types": "./dist/integrations/react/index.d.ts"
     },
     "./vue": {
       "import": "./dist/integrations/vue/index.js",
+      "require": "./dist/integrations/vue/index.js",
+      "default": "./dist/integrations/vue/index.js",
       "types": "./dist/integrations/vue/index.d.ts"
     },
     "./angular": {
       "import": "./dist/integrations/angular/index.js",
+      "require": "./dist/integrations/angular/index.js",
+      "default": "./dist/integrations/angular/index.js",
       "types": "./dist/integrations/angular/index.d.ts"
     }
   },
