@@ -12,16 +12,16 @@
       "types": "./dist/index.d.ts"
     },
     "./react": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/integrations/react/index.js",
+      "types": "./dist/integrations/react/index.d.ts"
     },
     "./vue": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/integrations/vue/index.js",
+      "types": "./dist/integrations/vue/index.d.ts"
     },
     "./angular": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/integrations/angular/index.js",
+      "types": "./dist/integrations/angular/index.d.ts"
     }
   },
   "files": [
