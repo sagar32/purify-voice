@@ -112,9 +112,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { usePurify } from 'purify-voice/vue';
 
-const { isReady, isProcessing, error, processFile } = usePurify({
-  wasmPath: '/rnnoise.wasm'
-});
+const { isReady, isProcessing, error, processFile } = usePurify();
 
 const status = ref('Initializing RNNoise WASM...');
 const isRecording = ref(false);

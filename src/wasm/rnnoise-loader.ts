@@ -21,13 +21,20 @@ export async function loadRNNoiseWASM(wasmPath?: string): Promise<any> {
       throw new Error('Invalid WASM module: expected a function');
     }
     
-    // Determine the WASM file path
+    // If wasmPath is provided, use it; otherwise try to load from bundled location
     const finalWasmPath = wasmPath || '/rnnoise.wasm';
     
     wasmModule = await createModule({
       locateFile: (path: string) => {
         // Return the path to the WASM file
         if (path.endsWith('.wasm')) {
+          // Try to use the bundled WASM file path relative to the package
+          if (!wasmPath && typeof window !== 'undefined') {
+            // In browser, try to load from the package's dist folder
+            const scriptPath = new URL(import.meta.url).pathname;
+            const wasmUrl = new URL('./rnnoise.wasm', import.meta.url).href;
+            return wasmUrl;
+          }
           return finalWasmPath;
         }
         return path;

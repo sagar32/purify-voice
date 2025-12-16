@@ -22,6 +22,11 @@
                 "glob": "**/*",
                 "input": "public",
                 "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/purify-voice/dist/wasm",
+                "output": "/node_modules/purify-voice/dist/wasm"
               }
             ],
             "styles": [],

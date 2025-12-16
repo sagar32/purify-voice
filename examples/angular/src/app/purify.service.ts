@@ -27,9 +27,7 @@ export class PurifyService implements OnDestroy {
   private async initialize(): Promise<void> {
     try {
       console.log('🚀 Initializing Purify with RNNoise WASM...');
-      this.purify = new Purify({
-        wasmPath: '/rnnoise.wasm' // Load from public directory
-      });
+      this.purify = new Purify();
       await this.purify.initialize();
       this._isReady.next(true);
       console.log('✅ Purify initialized successfully!');

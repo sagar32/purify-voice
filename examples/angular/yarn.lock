@@ -4827,10 +4827,10 @@ punycode@^2.1.0:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.1.tgz#027422e2faec0b25e1549c3e1bd8309b9133b6e5"
   integrity sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==
 
-purify-voice@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/purify-voice/-/purify-voice-1.0.7.tgz#d957878b0f466112bbcf1603941fb5d1813cc95a"
-  integrity sha512-JdOXpfWeR0moxAnQk77z6MySrLLZa/iRrbGs4G46HdJqSNkkwGKkiE9K7UUSOVldCezxe4MEM5gXj94Nqt3VPQ==
+purify-voice@1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/purify-voice/-/purify-voice-1.0.8.tgz#e412803d56a3d89a2993b85664e993b2795a732e"
+  integrity sha512-PjhIfaN3KSROSw5SEj+BPGfC1UYYj36BTGfxC9ZvA/79T65kACes2Q+cjLkDN4KXK9uZeAZHoMoJpJDgvGNjlA==
 
 qs@~6.14.0:
   version "6.14.0"
