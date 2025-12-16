@@ -7,7 +7,7 @@
 let wasmModule: any = null;
 let wasmReady = false;
 
-export async function loadRNNoiseWASM(): Promise<any> {
+export async function loadRNNoiseWASM(wasmPath?: string): Promise<any> {
   if (wasmReady) return wasmModule;
 
   try {
@@ -21,12 +21,14 @@ export async function loadRNNoiseWASM(): Promise<any> {
       throw new Error('Invalid WASM module: expected a function');
     }
     
+    // Determine the WASM file path
+    const finalWasmPath = wasmPath || '/rnnoise.wasm';
+    
     wasmModule = await createModule({
       locateFile: (path: string) => {
         // Return the path to the WASM file
-        // Use absolute path from public folder
         if (path.endsWith('.wasm')) {
-          return '/rnnoise.wasm';
+          return finalWasmPath;
         }
         return path;
       }
@@ -44,9 +46,14 @@ export async function loadRNNoiseWASM(): Promise<any> {
 export class RNNoiseWASM {
   private module: any = null;
   private state: any = null;
+  private wasmPath?: string;
+
+  constructor(wasmPath?: string) {
+    this.wasmPath = wasmPath;
+  }
 
   async initialize(): Promise<void> {
-    this.module = await loadRNNoiseWASM();
+    this.module = await loadRNNoiseWASM(this.wasmPath);
     
     // Create RNNoise state
     this.state = this.module._rnnoise_create(0);

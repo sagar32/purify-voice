@@ -31,7 +31,7 @@ export class Purify implements PurifyInstance {
 
       // Load and initialize RNNoise WASM
       console.log('Loading RNNoise WASM...');
-      this.rnnoiseWasm = new RNNoiseWASM();
+      this.rnnoiseWasm = new RNNoiseWASM(this.options.wasmPath);
       await this.rnnoiseWasm.initialize();
       
       this.ready = true;
